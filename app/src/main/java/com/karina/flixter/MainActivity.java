@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.d(TAG, "Hit json exception", e);
                 }
-                //simeple comment
+
             }
 
             @Override

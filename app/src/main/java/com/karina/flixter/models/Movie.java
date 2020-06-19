@@ -3,21 +3,31 @@ package com.karina.flixter.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Movie {
+
+    int movieId;
     String backdropPath; //that's the type of image for a landscape mode
     String posterPath; //property now it's empty
     String title;
     String overview;
+    double rating;
+
+    // empty constructor needed by a Parcel Library
+    public Movie() {}
 
     public Movie(JSONObject jsonObject) throws JSONException {
         backdropPath = jsonObject.getString("backdrop_path");
         posterPath = jsonObject.getString("poster_path"); //property = "to the value of jsOnObject posterPath
         title = jsonObject.getString("title");
         overview = jsonObject.getString("overview");
+        rating = jsonObject.getDouble("vote_average");
+        movieId = jsonObject.getInt("id");
     }
         //Now we gonna take in our JSONArray and return a list of movies.
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
@@ -28,7 +38,7 @@ public class Movie {
             just drove above.
             * JsonArray [JsonObject, JsonObject, jsonObject] ->  ArrayList[Movie, Movie, Movie]
             *              0           1              2
-            *JsobObject: {"popularity":133.519,"vote_count":7927,"video":false,"poster_path":"\/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg","id":496243,"adult":false,"backdrop_path":"\/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg","original_language":"ko","original_title":"기생충","genre_ids":[35,18,53],"title":"Parasite","vote_average":8.5,"overview":"All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.","release_date":"2019-05-30"}
+            *JsonObject: {"popularity":133.519,"vote_count":7927,"video":false,"poster_path":"\/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg","id":496243,"adult":false,"backdrop_path":"\/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg","original_language":"ko","original_title":"기생충","genre_ids":[35,18,53],"title":"Parasite","vote_average":8.5,"overview":"All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.","release_date":"2019-05-30"}
             *
             * movies.add: we are adding smth to array
             * new Movie() : we are creating a new movie class but we have to pass a jsonObject in its constructor
@@ -65,5 +75,13 @@ public class Movie {
 
     public String getOverview() {
         return overview;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public int getMovieId() {
+        return movieId;
     }
 }

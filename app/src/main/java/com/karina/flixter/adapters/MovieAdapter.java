@@ -1,20 +1,26 @@
 package com.karina.flixter.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.karina.flixter.DetailActivity;
 import com.karina.flixter.R;
 import com.karina.flixter.models.Movie;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -60,6 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         //ViewHolder is a representation of our row in the RecyclerView
+        RelativeLayout container;
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
@@ -67,17 +74,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //so here we define where are they coming from
+
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            container = itemView.findViewById(R.id.container);
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             //here we use the getter method on our movie and populate each of the views.
             //so android does't have an inbuilt way to render remote images, so we use library
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
-            //After passing the context you need to load the URL, then you gonna load it into a particular view
             String imageURL;
             //if phone is in landscape
             if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -85,8 +93,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 imageURL = movie.getBackdropPath();
             } else {
                 //else = poster image
-                imageURL = movie.getPosterPath();}
-                Glide.with(context).load(imageURL).into(ivPoster);
+                imageURL = movie.getPosterPath();
+            }
+
+            //After passing the context you need to load the URL, then you gonna load it into a particular view
+            Glide.with(context).load(imageURL).into(ivPoster);
+            // 1.Register a clickListener on a whole row
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // 2.Navigate to a new activity on tap
+                    //Toast.makeText(context, movie.getTitle(), Toast.LENGTH_SHORT).show();  //just to make sure that it works
+                    Intent i = new Intent(context, DetailActivity.class);
+                    // 1.putExtra("title", movie.getTitle());
+                    // to parcel the movie you have to add some dependency to app gradle
+                    i.putExtra("movie", Parcels.wrap(movie));
+                    context.startActivity(i);
+
+                }
+            });
 
             }
         }
